@@ -191,7 +191,7 @@ export function getQuoteMatchesInBookRef({
   const DATA_SEPARATOR = "|";
   const OPEN_CHAR = "{";
   const CLOSE_CHAR = "}";
-  const REF_PATTERN = "\\d+:\\d+";
+  const REF_PATTERN = "\\d+:[A-Za-z0-9]+";
   const OCCURRENCE_PATTERN = "\\d+";
   const enclose = (word) => OPEN_CHAR + word + CLOSE_CHAR;
 
