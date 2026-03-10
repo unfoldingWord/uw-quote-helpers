@@ -209,7 +209,7 @@ export function getQuoteMatchesInBookRef({
     return {
       text: _word,
       chapter: parseInt(chapter),
-      verse: parseInt(verse),
+      verse: verse,
       occurrence: parseInt(occurrence),
     };
   };
