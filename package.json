@@ -48,6 +48,7 @@
     "vite": "^4.1.4",
     "webpack-cli": "^4.10.0"
   },
+  "packageManager": "pnpm@10.30.3",
   "pnpm": {
     "overrides": {
       "webpack": "5.109.2"
