@@ -1,0 +1,7 @@
+allowBuilds:
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  sharp: true
+  uw-bible-parser: true
+  vue-demi: true

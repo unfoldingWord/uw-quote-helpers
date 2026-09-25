@@ -30,4 +30,5 @@ yarn-error.log*
 .yalc
 yalc.*
 .idea
-
+.history
+example
