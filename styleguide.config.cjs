@@ -25,6 +25,8 @@ module.exports = {
       test: /\.[jt]sx?$/,
       include: [srcPath],
       type: "javascript/auto",
+      // src uses extensionless ESM imports (e.g. './scripture')
+      resolve: { fullySpecified: false },
     });
     config.experiments = {
       ...(config.experiments || {}),
@@ -35,6 +37,10 @@ module.exports = {
       module: false,
       scriptType: "text/javascript",
     };
+    // CRA's ESLint plugin can't resolve eslint-plugin-jest under pnpm; linting isn't needed for the guide
+    config.plugins = config.plugins.filter(
+      (plugin) => plugin.constructor.name !== 'ESLintWebpackPlugin'
+    );
     config.resolve.fallback = {
       crypto: require.resolve('crypto-browserify'),
       fs: false,
