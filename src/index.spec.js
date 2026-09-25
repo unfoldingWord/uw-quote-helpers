@@ -1,4 +1,4 @@
-import { getQuoteMatchesInBookRef, getTargetQuoteFromWords } from "../src/";
+import { getQuoteMatchesInBookRef, getTargetQuoteFromWords, getParsedUSFM } from "../src/";
 import { normalize } from "./helpers/quote.js";
 import { getTargetBook, getSourceBook } from "../examples/getBook";
 
@@ -376,4 +376,31 @@ describe("Find quotes", () => {
     },
     TEST_TIMOUT
   );
+});
+
+describe("Verse spans in a chapter with front matter", () => {
+  // Modelled on the UST at DAN 9:20-21: a chapter heading (front matter) followed by a verse span.
+  const targetUsfm = `\\id DAN
+\\c 9
+\\s Daniel prays for his people
+\\p
+\\v 20-21 \\zaln-s |x-strong="c:H6419" x-lemma="פָּלַל" x-morph="He,C:Vtrmsa" x-occurrence="1" x-occurrences="1" x-content="וּ⁠מִתְפַּלֵּ֔ל" x-ref="9:20"\\*\\w was|x-occurrence="1" x-occurrences="1"\\w*
+\\w praying|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*.
+\\v 22 \\zaln-s |x-strong="H0995" x-lemma="בִּין" x-morph="He,Vhw3ms" x-occurrence="1" x-occurrences="1" x-content="וַ⁠יָּ֖בֶן" x-ref="9:22"\\*\\w He|x-occurrence="1" x-occurrences="1"\\w*
+\\w taught|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*.
+`;
+  const wordsMap = new Map([["9:20", [{ text: normalize("וּ⁠מִתְפַּלֵּ֔ל", true), occurrence: 1 }]]]);
+
+  test("finds the verse span", () => {
+    const targetBook = getParsedUSFM(targetUsfm).chapters;
+    expect(Object.keys(targetBook["9"])).toContain("front");
+    expect(getTargetQuoteFromWords({ targetBook, wordsMap })).toEqual("was praying");
+  });
+
+  test("finds the verse span when front matter is aliased to verse 0", () => {
+    // door43-preview-app copies each chapter's front matter to verse "0" so front-matter quotes convert.
+    const targetBook = getParsedUSFM(targetUsfm).chapters;
+    targetBook["9"]["0"] = targetBook["9"].front;
+    expect(getTargetQuoteFromWords({ targetBook, wordsMap })).toEqual("was praying");
+  });
 });

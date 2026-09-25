@@ -438,7 +438,11 @@ export function getTargetQuoteFromWords({ targetBook, wordsMap }, {removeBracket
     const targetChapter = targetBook[chapter] ?? {};
     let targetVerse = targetChapter?.[verse];
     if (!targetVerse) {
+      // Look for a verse span (e.g. "20-21") that contains the reference. Skip the chapter's
+      // front matter ("front", or "0" when a caller aliases it): bible-reference-range treats
+      // "C:0" as containing every verse, and number-like keys sort first, so "0" would win.
       const verses = Object.keys(targetChapter).find((verse) => {
+        if (verse === "front" || verse === "0") return false;
         const currentRef = `${chapter}:${verse}`;
         return doesReferenceContain(currentRef, ref);
       });
